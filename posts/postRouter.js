@@ -1,10 +1,11 @@
 const express = require('express');
 
 const Posts = require('./postDb');
-
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+const { logger, validatePost } = require('../middleware');
+
+router.get('/', logger, async (req, res) => {
   const posts = await Posts.get();
   try {
     res.status(200).json(posts)
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', logger, async (req, res) => {
   const { id } = req.params;
   const post = await Posts.getById(id);
   try {
@@ -29,7 +30,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', logger, async (req, res) => {
   const { id } = req.params;
   const post = req.body;
   try {
@@ -45,9 +46,9 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', logger, validatePost, async (req, res) => {
   const { id } = req.params;
-  const post = req.body
+  const post = req.body;
   try {
     if (!post) {
       res.status(404).json({ message: 'Post does not exist' })
@@ -62,9 +63,5 @@ router.put('/:id', async (req, res) => {
 });
 
 // custom middleware
-
-function validatePostId(req, res, next) {
-
-}
 
 module.exports = router;
