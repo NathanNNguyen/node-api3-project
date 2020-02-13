@@ -9,4 +9,5 @@ server.use(express.json());
 server.use('/api/posts', PostRouter);
 server.use('/api/users', UserRouter);
 
-server.listen(5000, console.log('Server listening on port 5000'));
+const port = process.env.PORT || 5000;
+server.listen(port, console.log(`Server listening on port ${port}`));
